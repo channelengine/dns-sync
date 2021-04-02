@@ -1,7 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DnsSync.ConsoleApp.Configuration;
+using DnsSync.ConsoleApp.Google;
 using DnsSync.ConsoleApp.TransIp;
+using DnsSync.ConsoleApp.TransIp.Auth;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -30,6 +31,7 @@ namespace DnsSync.ConsoleApp
                 services.AddHttpClient<ITransIpApiClient, TransIpApiClient>()
                     .AddHttpMessageHandler<TransIpAuthHandler>();
                 
+                services.AddSingleton<IGoogleDnsService, GoogleDnsService>();
                 services.AddSingleton<IDnsSyncService, DnsSyncService>();
             });
     }
