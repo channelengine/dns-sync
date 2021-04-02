@@ -4,6 +4,7 @@
     {
         public const string Section = "TransIpApi";
         
-        public string Key { get; set; }
+        public string Username { get; set; }
+        public string PrivateKey { get; set; }
     }
 }
