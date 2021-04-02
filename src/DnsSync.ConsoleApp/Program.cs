@@ -10,14 +10,14 @@ namespace DnsSync.ConsoleApp
 {
     class Program
     {
-        public static Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
             using var host = CreateHostBuilder(args).Build();
 
             var service = host.Services.GetRequiredService<IDnsSyncService>();
-            service.Sync();
+            await service.Sync();
 
-            return host.RunAsync();
+            await host.RunAsync();
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>
