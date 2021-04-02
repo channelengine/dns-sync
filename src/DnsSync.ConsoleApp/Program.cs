@@ -24,10 +24,11 @@ namespace DnsSync.ConsoleApp
             {
                 services.Configure<GoogleApiConfiguration>(context.Configuration.GetSection(GoogleApiConfiguration.Section));
                 services.Configure<TransIpApiConfiguration>(context.Configuration.GetSection(TransIpApiConfiguration.Section));
-
-                services.AddTransient<TransIpSigningHandler>();
+                
+                services.AddTransient<TransIpAuthHandler>();
+                services.AddHttpClient<ITransIpAuthClient, TransIpAuthClient>();
                 services.AddHttpClient<ITransIpApiClient, TransIpApiClient>()
-                    .AddHttpMessageHandler<TransIpSigningHandler>();
+                    .AddHttpMessageHandler<TransIpAuthHandler>();
                 
                 services.AddSingleton<IDnsSyncService, DnsSyncService>();
             });

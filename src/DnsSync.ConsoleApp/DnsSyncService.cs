@@ -20,7 +20,7 @@ namespace DnsSync.ConsoleApp
 
         public async Task Sync()
         {
-            var token = await _transIpApiClient.GetAccessToken();
+            var domains = await _transIpApiClient.GetDomains();
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using DnsSync.ConsoleApp.TransIp.Models;
 
 namespace DnsSync.ConsoleApp.TransIp
 {
     public interface ITransIpApiClient
     {
-        Task<string> GetAccessToken();
+        Task<IList<Domain>> GetDomains();
     }
 }

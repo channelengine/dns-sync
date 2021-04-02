@@ -1,10 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.IO;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text.Json;
+using System.Threading.Tasks;
 using DnsSync.ConsoleApp.Configuration;
-using DnsSync.ConsoleApp.TransIp;
+using DnsSync.ConsoleApp.TransIp.Auth;
 using DnsSync.ConsoleApp.TransIp.Models;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -20,34 +19,32 @@ namespace DnsSync.Tests
         /// See: https://github.com/transip/gotransip/blob/master/authenticator/sign_test.go
         /// </summary>
         [Test]
-        public void SignRequest()
+        public async Task SignRequest()
         {
-            var config = new TransIpApiConfiguration()
-            {
-                PrivateKey = PrivateKey,
-            };
-
             var content = new AuthRequest()
             {
                 Login = "test-user",
                 Nonce = "98475920834"
             };
 
-            var request = new HttpRequestMessage(HttpMethod.Post, "auth")
+            // Match GO implementation for test
+            var jsonSerializerOptions = new JsonSerializerOptions()
             {
-                Content = JsonContent.Create(content, options: new JsonSerializerOptions() { IgnoreNullValues = true })
+                IgnoreNullValues = true
             };
 
-            var options = new Mock<IOptionsMonitor<TransIpApiConfiguration>>();
-            options.Setup(c => c.CurrentValue).Returns(config);
-            
-            var handler = new TransIpSigningHandler(options.Object);
+            var httpClient = new Mock<HttpClient>();
+            var config = new Mock<IOptionsMonitor<TransIpApiConfiguration>>();
 
-            handler.SignRequest(request);
+            var client = new TransIpAuthClient(httpClient.Object, config.Object);
 
-            Assert.IsTrue(request.Headers.Contains("Signature"));
-            Assert.AreEqual(1, request.Headers.GetValues("Signature").Count());
-            Assert.AreEqual(Signature, request.Headers.GetValues("Signature").First());
+            await using var ms = new MemoryStream();
+            await JsonSerializer.SerializeAsync(ms, content, jsonSerializerOptions);
+            ms.Position = 0;
+
+            var signature = TransIpAuthClient.GetSignature(PrivateKey, ms);
+
+            Assert.AreEqual(Signature, signature);
         }
         
         private const string PrivateKey = @"-----BEGIN PRIVATE KEY-----
