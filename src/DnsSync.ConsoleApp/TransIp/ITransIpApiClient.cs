@@ -7,5 +7,6 @@ namespace DnsSync.ConsoleApp.TransIp
     public interface ITransIpApiClient
     {
         Task<IList<Domain>> GetDomains();
+        Task<IList<DnsEntry>> GetDnsEntries(string domain);
     }
 }

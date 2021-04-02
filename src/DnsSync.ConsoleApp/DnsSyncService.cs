@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using DnsSync.ConsoleApp.Google;
 using DnsSync.ConsoleApp.TransIp;
 using Microsoft.Extensions.Logging;
@@ -24,6 +25,7 @@ namespace DnsSync.ConsoleApp
         public async Task Sync()
         {
             var domains = await _transIpApiClient.GetDomains();
+            var dns = await _transIpApiClient.GetDnsEntries(domains.First().Name);
             var zones = await _googleDnsService.GetManagedZones();
         }
     }

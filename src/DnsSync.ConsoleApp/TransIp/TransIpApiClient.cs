@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using DnsSync.ConsoleApp.Configuration;
 using DnsSync.ConsoleApp.TransIp.Models;
-using Microsoft.Extensions.Options;
 
 namespace DnsSync.ConsoleApp.TransIp
 {
@@ -23,6 +21,12 @@ namespace DnsSync.ConsoleApp.TransIp
         {
             var response = await _client.GetFromJsonAsync<ApiResponse>("domains");
             return response?.Domains ?? new List<Domain>();
+        }
+        
+        public async Task<IList<DnsEntry>> GetDnsEntries(string domain)
+        {
+            var response = await _client.GetFromJsonAsync<ApiResponse>($"domains/{domain}/dns");
+            return response?.DnsEntries ?? new List<DnsEntry>();
         }
     }
 }
