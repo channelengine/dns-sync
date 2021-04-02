@@ -33,6 +33,27 @@ namespace DnsSync.ConsoleApp.Google
             return response.ManagedZones;
         }
 
+        public async Task<ManagedZone> CreateManagedZone(ManagedZone zone)
+        {
+            var request = _client.ManagedZones.Create(zone, _projectId);
+            var response = await request.ExecuteAsync();
+            return response;
+        }
+        
+        public async Task<IList<ResourceRecordSet>> GetRecords(string zoneName)
+        {
+            var request = _client.ResourceRecordSets.List(_projectId, zoneName);
+            var response = await request.ExecuteAsync();
+            return response.Rrsets;
+        }
+
+        public async Task<Change> CreateChange(string zoneName, Change change)
+        {
+            var request = _client.Changes.Create(change, _projectId, zoneName);
+            var response = await request.ExecuteAsync();
+            return response;
+        }
+
         private static DnsService GetClient(GoogleApiConfiguration config)
         {
             return new(new BaseClientService.Initializer
