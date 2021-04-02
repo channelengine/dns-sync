@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DnsSync.ConsoleApp.Configuration;
 using DnsSync.ConsoleApp.TransIp.Auth;
 using DnsSync.ConsoleApp.TransIp.Models;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
@@ -34,9 +35,10 @@ namespace DnsSync.Tests
             };
 
             var httpClient = new Mock<HttpClient>();
+            var cache = new Mock<IMemoryCache>();
             var config = new Mock<IOptionsMonitor<TransIpApiConfiguration>>();
 
-            var client = new TransIpAuthClient(httpClient.Object, config.Object);
+            var client = new TransIpAuthClient(httpClient.Object, cache.Object, config.Object);
 
             await using var ms = new MemoryStream();
             await JsonSerializer.SerializeAsync(ms, content, jsonSerializerOptions);

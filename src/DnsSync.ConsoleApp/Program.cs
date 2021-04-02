@@ -25,7 +25,8 @@ namespace DnsSync.ConsoleApp
             {
                 services.Configure<GoogleApiConfiguration>(context.Configuration.GetSection(GoogleApiConfiguration.Section));
                 services.Configure<TransIpApiConfiguration>(context.Configuration.GetSection(TransIpApiConfiguration.Section));
-                
+
+                services.AddMemoryCache();
                 services.AddTransient<TransIpAuthHandler>();
                 services.AddHttpClient<ITransIpAuthClient, TransIpAuthClient>();
                 services.AddHttpClient<ITransIpApiClient, TransIpApiClient>()
