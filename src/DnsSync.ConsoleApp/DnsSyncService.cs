@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DnsSync.ConsoleApp.Google;
 using DnsSync.ConsoleApp.TransIp;
@@ -63,10 +64,23 @@ namespace DnsSync.ConsoleApp
                     var googleRecordName = transIpRecord.Name.Replace("@", googleZoneDnsName);
                     var googleRecordContent = transIpRecord.Content.Replace("@", googleZoneDnsName);
                     
+                    if (transIpRecord.Type == "TXT")
+                    {
+                        // Remove whitespace in DKIM, DMARC
+                        if(googleRecordContent.StartsWith("v="))
+                        {
+                            googleRecordContent = Regex.Replace(googleRecordContent, @";(\s+)", ";");
+                        }
+                        
+                        // Quote strings
+                        // See: https://www.mailhardener.com/blog/how-to-enter-txt-values-in-google-cloud-dns
+                        googleRecordContent = $"\"{googleRecordContent}\"";
+                    }
+                    
                     // Always use full names
                     if (!googleRecordName.EndsWith(".")) googleRecordName += ".";
                     if (!googleRecordName.EndsWith(googleZoneDnsName)) googleRecordName += googleZoneDnsName;
-                    
+
                     // Check if the record already exists and was not yet processed for deletion
                     if(googleRecords.TryGetValue((googleRecordName, transIpRecord.Type), out var existingGoogleRecord) &&
                        !googleRecordDeletions.ContainsKey((googleRecordName, transIpRecord.Type)))
