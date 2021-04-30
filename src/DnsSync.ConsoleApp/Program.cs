@@ -36,7 +36,7 @@ namespace DnsSync.ConsoleApp
                 
                 services.AddSingleton<IAzureDnsService, AzureDnsService>();
                 services.AddSingleton<IGoogleDnsService, GoogleDnsService>();
-                services.AddSingleton<IDnsSyncService, GoogleDnsSyncService>();
+                services.AddSingleton<IDnsSyncService, AzureDnsSyncService>();
             });
     }
 }

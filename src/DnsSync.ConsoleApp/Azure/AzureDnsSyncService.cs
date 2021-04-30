@@ -23,6 +23,7 @@ namespace DnsSync.ConsoleApp.Azure
         public async Task Sync()
         {
             var transIpDomains = await _transIpApiClient.GetDomains();
+            var azureDnsZones = await _azureDnsService.GetZones();
         }
     }
 }
