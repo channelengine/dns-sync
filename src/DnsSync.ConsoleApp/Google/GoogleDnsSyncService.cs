@@ -8,12 +8,12 @@ using Google.Apis.Dns.v1.Data;
 
 namespace DnsSync.ConsoleApp
 {
-    internal class DnsSyncService : IDnsSyncService
+    internal class GoogleDnsSyncService : IDnsSyncService
     {
         private readonly IGoogleDnsService _googleDnsService;
         private readonly ITransIpApiClient _transIpApiClient;
 
-        public DnsSyncService(
+        public GoogleDnsSyncService(
             IGoogleDnsService googleDnsService,
             ITransIpApiClient transIpApiClient
         )

@@ -33,7 +33,7 @@ namespace DnsSync.ConsoleApp
                     .AddHttpMessageHandler<TransIpAuthHandler>();
                 
                 services.AddSingleton<IGoogleDnsService, GoogleDnsService>();
-                services.AddSingleton<IDnsSyncService, DnsSyncService>();
+                services.AddSingleton<IDnsSyncService, GoogleDnsSyncService>();
             });
     }
 }
