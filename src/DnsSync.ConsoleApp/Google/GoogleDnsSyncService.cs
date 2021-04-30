@@ -6,7 +6,7 @@ using DnsSync.ConsoleApp.Google;
 using DnsSync.ConsoleApp.TransIp;
 using Google.Apis.Dns.v1.Data;
 
-namespace DnsSync.ConsoleApp
+namespace DnsSync.ConsoleApp.Google
 {
     internal class GoogleDnsSyncService : IDnsSyncService
     {
@@ -120,8 +120,6 @@ namespace DnsSync.ConsoleApp
                 
                 await _googleDnsService.CreateChange(googleZoneName, googleRecordChange);
             }
-            
-            
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using DnsSync.ConsoleApp.Azure;
 using DnsSync.ConsoleApp.Configuration;
 using DnsSync.ConsoleApp.Google;
 using DnsSync.ConsoleApp.TransIp;
@@ -23,6 +24,7 @@ namespace DnsSync.ConsoleApp
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args).ConfigureServices((context, services) =>
             {
+                services.Configure<AzureApiConfiguration>(context.Configuration.GetSection(AzureApiConfiguration.Section));
                 services.Configure<GoogleApiConfiguration>(context.Configuration.GetSection(GoogleApiConfiguration.Section));
                 services.Configure<TransIpApiConfiguration>(context.Configuration.GetSection(TransIpApiConfiguration.Section));
 
@@ -32,6 +34,7 @@ namespace DnsSync.ConsoleApp
                 services.AddHttpClient<ITransIpApiClient, TransIpApiClient>()
                     .AddHttpMessageHandler<TransIpAuthHandler>();
                 
+                services.AddSingleton<IAzureDnsService, AzureDnsService>();
                 services.AddSingleton<IGoogleDnsService, GoogleDnsService>();
                 services.AddSingleton<IDnsSyncService, GoogleDnsSyncService>();
             });
